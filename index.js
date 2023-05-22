@@ -40,12 +40,30 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/alltoysdatas',async(req,res)=>{
+      console.log(req.query.email)
+    
+      let query ={};
+      if(req.query?.email){
+        query ={sellerEmail: req.query?.email}
+      }
+      const result = await toysCollection.find(query).toArray();
+      res.send(result)
+    })
+
+
+
     app.post('/alltoysdata',async(req,res)=>{
       const addDatas = req.body;
       console.log(addDatas);
       const result = await toysCollection.insertOne(addDatas);
       res.send(result);
     })
+
+    
+
+
+ 
 
 
 
