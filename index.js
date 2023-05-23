@@ -26,23 +26,23 @@ async function run() {
 
     const  toysCollection = client.db('toyBazar').collection('allToysData');
 
+    // get all data
     app.get('/alltoysdata',async(req,res)=>{
         const cursor = toysCollection.find();
         const result = await cursor.toArray();
         res.send(result)
     })
 
-
+  //  get  sone data
     app.get('/alltoysdata/:id',async(req,res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await toysCollection.findOne(query)
       res.send(result)
     })
-
+      // ***************** getb by  email
     app.get('/alltoysdatas',async(req,res)=>{
       console.log(req.query.email)
-    
       let query ={};
       if(req.query?.email){
         query ={sellerEmail: req.query?.email}
@@ -51,8 +51,8 @@ async function run() {
       res.send(result)
     })
 
-
-
+ 
+     // *****  Post add
     app.post('/alltoysdata',async(req,res)=>{
       const addDatas = req.body;
       console.log(addDatas);
@@ -60,12 +60,32 @@ async function run() {
       res.send(result);
     })
 
+      //***** */ Delete  One
     app.delete('/alltoysdatas/:id',async(req,res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await toysCollection.deleteOne(query)
       res.send(result)
     })
+
+    // Edit  data
+    app.put('/alltoysdatas/:id',async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const optaion ={ upsert: true}
+      const updatetoy =req.body
+      const toys={
+        $set:{
+          Price:updatetoy.Price,
+          Available_quantity:updatetoy.Available_quantity,
+          Detail_description:updatetoy.Detail_description
+
+        }
+      }
+      const result = await toysCollection.updateOne(filter,toys,optaion)
+      res.send(result)
+    })
+
 
     
 
